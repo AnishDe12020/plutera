@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { Box, chakra, Heading, Text } from "@chakra-ui/react";
+import { chakra, Heading, Text } from "@chakra-ui/react";
 
 const Home: NextPage = () => {
   return (
