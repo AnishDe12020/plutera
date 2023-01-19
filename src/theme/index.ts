@@ -1,10 +1,10 @@
 import { extendTheme } from "@chakra-ui/react";
-import { accentPurple, accentTokens, mainColors, stateColors } from "./colors";
+import { accentColors, accentTokens, mainColors, stateColors } from "./colors";
 import { components } from "./components";
 
 const theme = extendTheme({
   components,
-  colors: { ...accentPurple },
+  colors: { ...accentColors },
   semanticTokens: {
     colors: { ...mainColors, ...accentTokens, ...stateColors },
   },

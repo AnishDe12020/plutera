@@ -1,19 +1,19 @@
 export const mainColors = {
   "brand.primary": {
     default: "#fafafa",
-    _dark: "#0f0f0f",
+    _dark: "#0a0317",
   },
   "brand.secondary": {
     default: "#eeeeee",
-    _dark: "#222222",
+    _dark: "#180D30",
   },
   "brand.tertiary": {
     default: "#cecfd1",
-    _dark: "#303030",
+    _dark: "#301A60",
   },
   "brand.quaternary": {
     default: "#bdbdc2",
-    _dark: "#474747",
+    _dark: "#492691",
   },
 };
 
@@ -36,33 +36,18 @@ export const stateColors = {
   },
 };
 
-export const accentBlue = {
+export const accentColors = {
   accent: {
-    50: "#dff2ff",
-    100: "#b3d4ff",
-    200: "#84b7fb",
-    300: "#549af6",
-    400: "#267ef2",
-    500: "#0d64d9",
-    600: "#044eaa",
-    700: "#00387a",
-    800: "#00214c",
-    900: "#000c1f",
-  },
-};
-
-export const accentPurple = {
-  accent: {
-    50: "#f2e6ff",
-    100: "#d9b8ff",
-    200: "#c08aff",
-    300: "#a75cff",
-    400: "#8f2eff",
-    500: "#7600d9",
-    600: "#5a00aa",
-    700: "#3d007a",
-    800: "#20004c",
-    900: "#0f001f",
+    50: "#F6F3FC",
+    100: "#EBE2FF",
+    200: "#CEBAF9",
+    300: "#B291F6",
+    400: "#9466F4",
+    500: "#7940F1",
+    600: "#6133C1",
+    700: "#492691",
+    800: "#301A60",
+    900: "#180D30",
   },
 };
 

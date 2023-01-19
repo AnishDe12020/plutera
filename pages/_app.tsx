@@ -1,6 +1,6 @@
 import "../src/styles/globals.css";
 import type { AppProps } from "next/app";
-import { chakra, ChakraProvider } from "@chakra-ui/react";
+import { Box, chakra, ChakraProvider } from "@chakra-ui/react";
 import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
@@ -62,7 +62,31 @@ export default function App({
             <QueryClientProvider client={queryClient}>
               <SessionProvider session={session}>
                 <Header />
-                <chakra.main mt={16} px={[4, 8, 16, 32]}>
+                <Box
+                  bg="#f53598"
+                  filter="blur(200px)"
+                  h={{ base: "52", md: "72" }}
+                  position="absolute"
+                  rounded="full"
+                  w={{ base: "60", md: "96" }}
+                  zIndex="50"
+                  left="16"
+                  top="96"
+                  opacity="0.3"
+                />
+                <Box
+                  bg="#484bfd"
+                  filter="blur(200px)"
+                  h={{ base: "52", md: "72" }}
+                  position="absolute"
+                  rounded="full"
+                  w={{ base: "60", md: "96" }}
+                  zIndex="50"
+                  right="16"
+                  top="48"
+                  opacity="0.6"
+                />
+                <chakra.main mt={16} px={[4, 8, 16, 32]} h="90vh">
                   <Component {...pageProps} />
                 </chakra.main>
               </SessionProvider>

@@ -41,7 +41,7 @@ const Header = () => {
       py={6}
       justifyContent="space-between"
       alignItems="center"
-      height={20}
+      height="10vh"
       borderBottom="1px solid"
       borderBottomColor="brand.secondary"
     >
