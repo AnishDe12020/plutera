@@ -8,10 +8,10 @@ const Home: NextPage = () => {
   console.log(program);
 
   return (
-    <chakra.main mt={16} px={[4, 8, 16, 32]}>
+    <>
       <Heading>Sandstorm project</Heading>
       <Text>on-chain transparent fundraising</Text>
-    </chakra.main>
+    </>
   );
 };
 

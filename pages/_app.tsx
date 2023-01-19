@@ -1,6 +1,6 @@
 import "../src/styles/globals.css";
 import type { AppProps } from "next/app";
-import { ChakraProvider } from "@chakra-ui/react";
+import { chakra, ChakraProvider } from "@chakra-ui/react";
 import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
@@ -21,12 +21,22 @@ import "../src/styles/wallet-adapter.css";
 import { SessionProvider } from "next-auth/react";
 import { clusterApiUrl } from "@solana/web3.js";
 import Header from "../src/components/Header";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 const ReactUIWalletModalProviderDynamic = dynamic(
   async () =>
     (await import("@solana/wallet-adapter-react-ui")).WalletModalProvider,
   { ssr: false }
 );
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 export default function App({
   Component,
@@ -49,10 +59,14 @@ export default function App({
       <ChakraProvider theme={theme}>
         <WalletProvider wallets={wallets} autoConnect>
           <ReactUIWalletModalProviderDynamic>
-            <SessionProvider session={session}>
-              <Header />
-              <Component {...pageProps} />
-            </SessionProvider>
+            <QueryClientProvider client={queryClient}>
+              <SessionProvider session={session}>
+                <Header />
+                <chakra.main mt={16} px={[4, 8, 16, 32]}>
+                  <Component {...pageProps} />
+                </chakra.main>
+              </SessionProvider>
+            </QueryClientProvider>
           </ReactUIWalletModalProviderDynamic>
         </WalletProvider>
       </ChakraProvider>
