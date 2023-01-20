@@ -87,10 +87,19 @@ const EditBuidlModal = ({
               as="form"
               onSubmit={handleSubmit((data) => mutate(data))}
             >
-              <FormControl isRequired>
+              <FormControl isRequired isInvalid={errors.name ? true : false}>
                 <FormLabel>Name</FormLabel>
-                <Input {...register("name", { required: true })} />
-                {errors.name && <FormErrorMessage>Required</FormErrorMessage>}
+                <Input
+                  {...register("name", {
+                    required: {
+                      value: true,
+                      message: "Required",
+                    },
+                  })}
+                />
+                {errors.name && (
+                  <FormErrorMessage>{errors.name.message}</FormErrorMessage>
+                )}
               </FormControl>
 
               <FormControl>

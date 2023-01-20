@@ -10,38 +10,41 @@ import {
   FormErrorMessage,
   FormHelperText,
   FormLabel,
-  HStack,
   Input,
   Textarea,
-  useRadioGroup,
   VStack,
   ButtonProps,
   useDisclosure,
   Icon,
 } from "@chakra-ui/react";
+import { BN } from "@project-serum/anchor";
 import { Keypair, PublicKey } from "@solana/web3.js";
 import { PlusIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useCallback } from "react";
-import { useController, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import useProgram from "../hooks/useProgram";
 import { BONK_TOKEN, USDC_TOKEN } from "../lib/constants";
 import { Token } from "../types/model";
-import TokenRadio from "./TokenRadio";
 
-interface NewBuidlForm {
+interface NewProposalForm {
   name: string;
-  description?: string;
-  logoUrl?: string;
+  purpose: string;
   amount: number;
-  token: Token;
+  withdrawerAddresss: string;
+  numberOfDays: number;
 }
 
-const CreateBuidlModal = ({
-  children = "New Buidl",
+interface CreateProposalModalProps extends ButtonProps {
+  buidl: any; // TODO: type this
+}
+
+const CreateProposalModal = ({
+  children = "New Proposal",
+  buidl,
   ...otherProps
-}: ButtonProps) => {
+}: CreateProposalModalProps) => {
   const { data: session } = useSession();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -52,30 +55,10 @@ const CreateBuidlModal = ({
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<NewBuidlForm>({
-    defaultValues: {
-      token: Token.USDC,
-    },
-  });
-
-  const {
-    field: { value: selectedToken, onChange: onSelectedTokenChange },
-  } = useController({
-    control,
-    name: "token",
-    defaultValue: Token.USDC,
-  });
-
-  const {
-    getRadioProps: getSelectedTokensRadioProps,
-    getRootProps: getSelectedTokenRootProps,
-  } = useRadioGroup({
-    onChange: onSelectedTokenChange,
-    value: selectedToken,
-  });
+  } = useForm<NewProposalForm>();
 
   const handleCreateBuidl = useCallback(
-    async (data: NewBuidlForm) => {
+    async (data: NewProposalForm) => {
       if (!program) {
         throw new Error("Program not initialized");
       }
@@ -86,35 +69,40 @@ const CreateBuidlModal = ({
 
       console.log(data);
 
-      const token = data.token === Token.USDC ? USDC_TOKEN : BONK_TOKEN;
-
       // TODO: create buidl on db and store the id in db_id
 
-      // let db_id = "test";
+      let db_id = "test";
 
-      const buidlAccountKeypair = Keypair.generate();
+      const token = buidl.token === Token.USDC ? USDC_TOKEN : BONK_TOKEN;
+
+      const proposalAccountKeypair = Keypair.generate();
 
       const [vaultPDAAddress] = PublicKey.findProgramAddressSync(
         [
           Buffer.from("vault"),
-          buidlAccountKeypair.publicKey.toBuffer(),
+          new PublicKey(buidl.address).toBuffer(),
           new PublicKey(token.address).toBuffer(),
         ],
         program.programId
       );
 
       // program.methods
-      //   .initializeBuidl(db_id)
+      //   .createProposal(
+      //     new BN(data.amount),
+      //     db_id,
+      //     new PublicKey(data.withdrawerAddresss),
+      //     new BN(7)
+      //   )
       //   .accounts({
-      //     buidlAccount: buidlAccountKeypair.publicKey,
-      // mint: token.address,
-      //     owner: session.user.name,
+      //     buidlAccount: new PublicKey(buidl.address),
+      //     proposalAccount: proposalAccountKeypair.publicKey,
+      //     payer: new PublicKey(session.user.name),
       //     vault: vaultPDAAddress,
       //   })
-      //   .signers([buidlAccountKeypair])
+      //   .signers([proposalAccountKeypair])
       //   .rpc();
     },
-    [program, session?.user?.name]
+    [program, session?.user?.name, buidl]
   );
 
   const { mutate, isLoading } = useMutation(handleCreateBuidl);
@@ -155,9 +143,22 @@ const CreateBuidlModal = ({
                 )}
               </FormControl>
 
-              <FormControl>
+              <FormControl isRequired isInvalid={errors.purpose ? true : false}>
                 <FormLabel>Description</FormLabel>
-                <Textarea {...register("description", { required: false })} />
+                <Textarea
+                  {...register("purpose", {
+                    required: {
+                      value: true,
+                      message: "Required",
+                    },
+                  })}
+                />
+                <FormHelperText>
+                  A proper reason for the need of the funds. Include links, etc.
+                </FormHelperText>
+                {errors.purpose && (
+                  <FormErrorMessage>{errors.purpose.message}</FormErrorMessage>
+                )}
               </FormControl>
 
               <FormControl isRequired isInvalid={errors.amount ? true : false}>
@@ -171,39 +172,65 @@ const CreateBuidlModal = ({
                   })}
                   type="number"
                 />
-                <FormHelperText>
-                  Amount of funding you need in the token chosen below
-                </FormHelperText>
                 {errors.amount && (
                   <FormErrorMessage>{errors.amount.message}</FormErrorMessage>
                 )}
               </FormControl>
 
-              <FormControl isRequired isInvalid={errors.token ? true : false}>
-                <FormLabel>Token</FormLabel>
-                <HStack {...getSelectedTokenRootProps()}>
-                  <TokenRadio
-                    logoURI={USDC_TOKEN.logoURI}
-                    symbol="USDC"
-                    {...getSelectedTokensRadioProps({ value: Token.USDC })}
-                  />
-                  <TokenRadio
-                    logoURI={BONK_TOKEN.logoURI}
-                    symbol="BONK"
-                    {...getSelectedTokensRadioProps({ value: Token.BONK })}
-                  />
-                </HStack>
+              <FormControl
+                isRequired
+                isInvalid={errors.numberOfDays ? true : false}
+              >
+                <FormLabel>End after</FormLabel>
+                <Input
+                  {...register("numberOfDays", {
+                    required: {
+                      value: true,
+                      message: "Required",
+                    },
+                    min: {
+                      value: 3,
+                      message: "Minimum 3 days",
+                    },
+                  })}
+                  type="number"
+                />
                 <FormHelperText>
-                  Token you want to receive funding in (YOU CANNOT CHANGE THIS
-                  LATER)
+                  Number of days after which the proposal will end (minimum 3)
                 </FormHelperText>
-                {errors.token && (
-                  <FormErrorMessage>{errors.token.message}</FormErrorMessage>
+                {errors.numberOfDays && (
+                  <FormErrorMessage>
+                    {errors.numberOfDays.message}
+                  </FormErrorMessage>
+                )}
+              </FormControl>
+
+              <FormControl
+                isRequired
+                isInvalid={errors.withdrawerAddresss ? true : false}
+              >
+                <FormLabel>Withdrawer Address</FormLabel>
+                <Input
+                  {...register("withdrawerAddresss", {
+                    required: {
+                      value: true,
+                      message: "Required",
+                    },
+                  })}
+                />
+                <FormHelperText>
+                  Valid Solana wallet address to which funds should be sent to
+                  if the proposal is passed
+                </FormHelperText>
+                {errors.withdrawerAddresss && (
+                  <FormErrorMessage>
+                    {errors.withdrawerAddresss.message}
+                  </FormErrorMessage>
                 )}
               </FormControl>
 
               <Button isLoading={isLoading} type="submit">
-                Create Buidl
+                Create Proposal
               </Button>
             </VStack>
           </ModalBody>
@@ -213,4 +240,4 @@ const CreateBuidlModal = ({
   );
 };
 
-export default CreateBuidlModal;
+export default CreateProposalModal;

@@ -4,6 +4,7 @@ import { unstable_getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 
 import CreateBuidlModal from "../../src/components/CreateBuidlModal";
+import CreateProposalModal from "../../src/components/CreateProposalModal";
 import EditBuidlModal from "../../src/components/EditBuidlModal";
 
 import { authOptions } from "../api/auth/[...nextauth]";
@@ -19,6 +20,9 @@ const DashboardPage = () => {
       <EditBuidlModal previousBuidl={{ name: "test", description: "desc" }}>
         Edit Buidl
       </EditBuidlModal>
+      <CreateProposalModal
+        buidl={{ address: "gwerhiogh", token: "USDC" }}
+      ></CreateProposalModal>
     </>
   );
 };
