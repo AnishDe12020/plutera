@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 
 import CreateBuidlModal from "../../src/components/CreateBuidlModal";
 import CreateProposalModal from "../../src/components/CreateProposalModal";
+import DepositTokensModal from "../../src/components/DepositTokensModal";
 import EditBuidlModal from "../../src/components/EditBuidlModal";
 import CreaeUpdateModal from "../../src/components/PostUpdateModal";
 import VoteModal from "../../src/components/VoteModal";
@@ -39,6 +40,16 @@ const DashboardPage = () => {
       <CreaeUpdateModal buidl={{ address: "wer", updatesTillNow: 69 }}>
         Post Update
       </CreaeUpdateModal>
+      <DepositTokensModal
+        buidl={{
+          amountRequested: 10000,
+          amountFundedTillNow: 3000,
+          address: "erw",
+          token: "USDC",
+        }}
+      >
+        Deposit Tokens
+      </DepositTokensModal>
     </>
   );
 };
