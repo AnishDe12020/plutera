@@ -57,7 +57,7 @@ const CreateProposalModal = ({
     handleSubmit,
   } = useForm<NewProposalForm>();
 
-  const handleCreateBuidl = useCallback(
+  const handleCreateProposal = useCallback(
     async (data: NewProposalForm) => {
       if (!program) {
         throw new Error("Program not initialized");
@@ -105,7 +105,7 @@ const CreateProposalModal = ({
     [program, session?.user?.name, buidl]
   );
 
-  const { mutate, isLoading } = useMutation(handleCreateBuidl);
+  const { mutate, isLoading } = useMutation(handleCreateProposal);
 
   return (
     <>

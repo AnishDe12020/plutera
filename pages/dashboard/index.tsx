@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import CreateBuidlModal from "../../src/components/CreateBuidlModal";
 import CreateProposalModal from "../../src/components/CreateProposalModal";
 import EditBuidlModal from "../../src/components/EditBuidlModal";
+import CreaeUpdateModal from "../../src/components/PostUpdateModal";
 import VoteModal from "../../src/components/VoteModal";
 
 import { authOptions } from "../api/auth/[...nextauth]";
@@ -35,6 +36,9 @@ const DashboardPage = () => {
       >
         Vote
       </VoteModal>
+      <CreaeUpdateModal buidl={{ address: "wer", updatesTillNow: 69 }}>
+        Post Update
+      </CreaeUpdateModal>
     </>
   );
 };

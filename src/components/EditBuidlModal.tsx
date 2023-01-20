@@ -51,7 +51,7 @@ const EditBuidlModal = ({
     },
   });
 
-  const handleCreateBuidl = useCallback(
+  const handleEditBuidl = useCallback(
     async (data: EditBuidlForm) => {
       if (!session?.user?.name) {
         throw new Error("User not logged in");
@@ -64,7 +64,7 @@ const EditBuidlModal = ({
     [session?.user?.name]
   );
 
-  const { mutate, isLoading } = useMutation(handleCreateBuidl);
+  const { mutate, isLoading } = useMutation(handleEditBuidl);
 
   return (
     <>
