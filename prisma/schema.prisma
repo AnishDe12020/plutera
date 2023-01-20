@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Token {
+  USDC
+  BONK
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  pubkey    String   @unique
+  avatarUrl String?
+  name      String?
+  email     String?
+  twitter   String?
+  buidls    Buidl[]
+}
+
+model Buidl {
+  id              String     @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  name            String
+  description     String?
+  url             String?
+  github          String?
+  twitter         String?
+  pubkey          String
+  amountRequested Int
+  amountRaised    Int
+  token           Token      @default(USDC)
+  updatesTillNow  Int        @default(0)
+  owner           User       @relation(fields: [ownerId], references: [id])
+  ownerId         String     @db.ObjectId
+  Proposal        Proposal[]
+  Update          Update[]
+  Goal            Goal[]
+}
+
+model Proposal {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  name         String
+  purpose      String
+  amount       Int
+  upvotes      Int      @default(0)
+  downvotes    Int      @default(0)
+  endTimestamp Int
+  buidl        Buidl    @relation(fields: [buidlId], references: [id])
+  buidlId      String   @db.ObjectId
+}
+
+model Update {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  name         String
+  description  String
+  updateNumber Int
+  buidl        Buidl    @relation(fields: [buidlId], references: [id])
+  buidlId      String   @db.ObjectId
+}
+
+model Goal {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  name        String
+  description String
+  amount      Int
+  completedAt DateTime?
+  buidl       Buidl     @relation(fields: [buidlId], references: [id])
+  buidlId     String    @db.ObjectId
+}
