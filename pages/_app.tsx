@@ -69,7 +69,6 @@ export default function App({
                   position="absolute"
                   rounded="full"
                   w={{ base: "60", md: "96" }}
-                  zIndex="50"
                   left="16"
                   top="96"
                   opacity="0.3"
@@ -81,12 +80,11 @@ export default function App({
                   position="absolute"
                   rounded="full"
                   w={{ base: "60", md: "96" }}
-                  zIndex="50"
                   right="16"
                   top="48"
                   opacity="0.6"
                 />
-                <chakra.main mt={16} px={[4, 8, 16, 32]} h="90vh">
+                <chakra.main zIndex="1" mt={16} px={[4, 8, 16, 32]} h="90vh">
                   <Component {...pageProps} />
                 </chakra.main>
               </SessionProvider>
