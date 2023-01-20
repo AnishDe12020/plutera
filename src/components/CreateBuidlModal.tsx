@@ -34,7 +34,8 @@ import TokenRadio from "./TokenRadio";
 interface NewBuidlForm {
   name: string;
   description?: string;
-  logoUrl: string;
+  logoUrl?: string;
+  amount: number;
   token: Token;
 }
 
@@ -146,9 +147,20 @@ const CreateBuidlModal = ({
                 {errors.name && <FormErrorMessage>Required</FormErrorMessage>}
               </FormControl>
 
-              <FormControl isRequired>
+              <FormControl>
                 <FormLabel>Description</FormLabel>
                 <Textarea {...register("description", { required: false })} />
+              </FormControl>
+
+              <FormControl isRequired>
+                <FormLabel>Amount</FormLabel>
+                <Input
+                  {...register("name", { required: true })}
+                  type="number"
+                />
+                <FormHelperText>
+                  Amount of funding you need in the token chosen below
+                </FormHelperText>
                 {errors.name && <FormErrorMessage>Required</FormErrorMessage>}
               </FormControl>
 
@@ -167,13 +179,14 @@ const CreateBuidlModal = ({
                   />
                 </HStack>
                 <FormHelperText>
-                  Token you want to receive funding in
+                  Token you want to receive funding in (YOU CANNOT CHANGE THIS
+                  LATER)
                 </FormHelperText>
                 {errors.name && <FormErrorMessage>Required</FormErrorMessage>}
               </FormControl>
 
               <Button isLoading={isLoading} type="submit">
-                Create Organization
+                Create Buidl
               </Button>
             </VStack>
           </ModalBody>

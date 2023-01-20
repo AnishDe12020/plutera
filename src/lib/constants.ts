@@ -1,5 +1,5 @@
 export const USDC_TOKEN = {
-  address: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  address: "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU", // USDC ON DEVNET https://explorer.solana.com/address/4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU?cluster=devnet
   chainId: 101,
   decimals: 6,
   name: "USD Coin",
@@ -12,7 +12,7 @@ export const USDC_TOKEN = {
 };
 
 export const BONK_TOKEN = {
-  address: "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+  address: "8HyQcabPz3TR3ch8CseGiD3g8ajKzaeqZ48xf4ocpnjm", // DUMMY TOKEN
   chainId: 101,
   decimals: 5,
   name: "BonkCoin",
