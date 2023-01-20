@@ -4,6 +4,7 @@ import nacl from "tweetnacl";
 import bs58 from "bs58";
 import { NextApiRequest, NextApiResponse } from "next";
 import { IncomingMessage } from "http";
+import { prisma } from "../../../src/lib/db";
 
 type ServerSidePropsReq = IncomingMessage & {
   cookies: Partial<{ [key: string]: string }>;
@@ -44,6 +45,20 @@ export const authOptions = (
           const user = { name: credentials.publicKey };
 
           // add logic to check with backend if profile exists or create profile
+
+          const profile = await prisma.user.findUnique({
+            where: {
+              pubkey: credentials.publicKey,
+            },
+          });
+
+          if (!profile) {
+            await prisma.user.create({
+              data: {
+                pubkey: credentials.publicKey,
+              },
+            });
+          }
 
           return user;
         },
