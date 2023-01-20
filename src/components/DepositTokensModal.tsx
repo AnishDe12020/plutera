@@ -17,9 +17,11 @@ import {
   useDisclosure,
   Icon,
   useToast,
+  Text,
 } from "@chakra-ui/react";
 import { BN } from "@project-serum/anchor";
 import {
+  amountToUiAmount,
   createAssociatedTokenAccountInstruction,
   getAccount,
   getAssociatedTokenAddress,
@@ -48,7 +50,7 @@ interface DepositTokensModalProps extends ButtonProps {
 }
 
 const DepositTokensModal = ({
-  children = "Post Update",
+  children = "Fund Buidl",
   buidl,
   ...otherProps
 }: DepositTokensModalProps) => {
@@ -188,7 +190,7 @@ const DepositTokensModal = ({
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>New Update</ModalHeader>
+          <ModalHeader>Fund Buidl</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <VStack
@@ -196,6 +198,20 @@ const DepositTokensModal = ({
               as="form"
               onSubmit={handleSubmit((data) => mutate(data))}
             >
+              <VStack gap={1}>
+                <Text>
+                  Remaining amount required by the buidl:{" "}
+                  {buidl.amountRequested - buidl.amountFundedTillNow}
+                </Text>
+                <Text fontSize="xs" color="gray.300">
+                  Amount buidl had requested in total: {buidl.amountRequested}
+                </Text>
+                <Text fontSize="xs" color="gray.300">
+                  Amount buidl has got in funding till now:{" "}
+                  {buidl.amountFundedTillNow}
+                </Text>{" "}
+              </VStack>
+
               <FormControl isRequired isInvalid={errors.amount ? true : false}>
                 <FormLabel>Amount</FormLabel>
                 <Input
@@ -207,13 +223,16 @@ const DepositTokensModal = ({
                   })}
                   type="number"
                 />
+                <FormHelperText>
+                  Amount of money you want to fund
+                </FormHelperText>
                 {errors.amount && (
                   <FormErrorMessage>{errors.amount.message}</FormErrorMessage>
                 )}
               </FormControl>
 
               <Button isLoading={isLoading} type="submit">
-                Deposit
+                Fund
               </Button>
             </VStack>
           </ModalBody>
