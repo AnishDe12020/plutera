@@ -120,7 +120,7 @@ const CreateProposalModal = ({
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>New Buidl</ModalHeader>
+          <ModalHeader>New Proposal</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <VStack

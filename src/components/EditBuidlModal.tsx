@@ -79,7 +79,7 @@ const EditBuidlModal = ({
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>New Buidl</ModalHeader>
+          <ModalHeader>Edit Buidl</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <VStack

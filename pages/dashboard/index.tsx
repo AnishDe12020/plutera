@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import CreateBuidlModal from "../../src/components/CreateBuidlModal";
 import CreateProposalModal from "../../src/components/CreateProposalModal";
 import EditBuidlModal from "../../src/components/EditBuidlModal";
+import VoteModal from "../../src/components/VoteModal";
 
 import { authOptions } from "../api/auth/[...nextauth]";
 
@@ -20,9 +21,20 @@ const DashboardPage = () => {
       <EditBuidlModal previousBuidl={{ name: "test", description: "desc" }}>
         Edit Buidl
       </EditBuidlModal>
-      <CreateProposalModal
-        buidl={{ address: "gwerhiogh", token: "USDC" }}
-      ></CreateProposalModal>
+      <CreateProposalModal buidl={{ address: "gwerhiogh", token: "USDC" }}>
+        Create Proposal
+      </CreateProposalModal>
+
+      <VoteModal
+        proposal={{
+          address: "fwer",
+          name: "test proposal",
+          purpose:
+            "Commodo dolor pariatur voluptate velit excepteur commodo minim mollit eiusmod elit commodo laborum consequat. Quis sit commodo et id labore cupidatat ex enim non proident cillum tempor et. Duis minim enim nostrud mollit est dolore eu voluptate pariatur tempor nulla. Sit irure dolore ipsum incididunt exercitation. Ut aliqua quis sint sit ipsum ex nulla mollit nisi occaecat in cillum esse laboris.",
+        }}
+      >
+        Vote
+      </VoteModal>
     </>
   );
 };
