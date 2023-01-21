@@ -126,7 +126,9 @@ const ConnectWallet = forwardRef<ConnectWalletProps, "button">(
       await signIn("credentials", {
         publicKey: publicKey?.toBase58(),
         signature: base58.encode(signedMessage),
-        callbackUrl: callbackUrl ?? `${window.location.origin}/`,
+        callbackUrl: callbackUrl
+          ? `${window.location.origin}/${callbackUrl}`
+          : `${window.location.origin}/`,
       });
 
       setIsSigningIn(false);
@@ -196,7 +198,7 @@ const ConnectWallet = forwardRef<ConnectWalletProps, "button">(
       </Popover>
     ) : (
       <>
-        <Button w="40" onClick={onModalOpen} {...otherProps}>
+        <Button onClick={onModalOpen} {...otherProps}>
           {children || "Get Started"}
         </Button>
 

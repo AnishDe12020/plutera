@@ -19,9 +19,9 @@ import {
   useToast,
   Text,
 } from "@chakra-ui/react";
+import { Buidl } from "@prisma/client";
 import { BN } from "@project-serum/anchor";
 import {
-  amountToUiAmount,
   createAssociatedTokenAccountInstruction,
   getAccount,
   getAssociatedTokenAddress,
@@ -40,24 +40,27 @@ import { useMutation } from "react-query";
 import useProgram from "../hooks/useProgram";
 import { BONK_TOKEN, USDC_TOKEN } from "../lib/constants";
 import { Token } from "../types/model";
+import ConnectWallet from "./ConnectWallet";
 
 interface DepositTokensForm {
   amount: number;
 }
 
 interface DepositTokensModalProps extends ButtonProps {
-  buidl: any; // TODO: type this
+  buidl: Buidl;
+  callbackUrl?: string;
 }
 
 const DepositTokensModal = ({
   children = "Fund Buidl",
   buidl,
+  callbackUrl,
   ...otherProps
 }: DepositTokensModalProps) => {
   const { data: session } = useSession();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { connection } = useConnection();
-  const { sendTransaction } = useWallet();
+  const { sendTransaction, publicKey } = useWallet();
 
   const { program } = useProgram();
 
@@ -80,21 +83,19 @@ const DepositTokensModal = ({
         throw new Error("User not logged in");
       }
 
-      const token = buidl.token === Token.USDC ? USDC_TOKEN : BONK_TOKEN;
-
       console.log(data);
 
       const backerAccountPDA = PublicKey.findProgramAddressSync(
         [
           Buffer.from("backer"),
-          new PublicKey(buidl.address).toBuffer(),
+          new PublicKey(buidl.token.address).toBuffer(),
           new PublicKey(session.user.name).toBuffer(),
         ],
         program.programId
       )[0];
 
       const depositorTokenAccountAddress = getAssociatedTokenAddressSync(
-        new PublicKey(token.address),
+        new PublicKey(buidl.token.address),
         new PublicKey(session.user.name)
       );
 
@@ -111,7 +112,7 @@ const DepositTokensModal = ({
             new PublicKey(session.user.name),
             depositorTokenAccountAddress,
             new PublicKey(session.user.name),
-            new PublicKey(token.address)
+            new PublicKey(buidl.token.address)
           );
 
           tx.add(ix);
@@ -154,8 +155,8 @@ const DepositTokensModal = ({
       const [vaultPDAAddress] = PublicKey.findProgramAddressSync(
         [
           Buffer.from("vault"),
-          new PublicKey(buidl.address).toBuffer(),
-          new PublicKey(token.address).toBuffer(),
+          new PublicKey(buidl.pubkey).toBuffer(),
+          new PublicKey(buidl.token.address).toBuffer(),
         ],
         program.programId
       );
@@ -201,15 +202,14 @@ const DepositTokensModal = ({
               <VStack gap={1}>
                 <Text>
                   Remaining amount required by the buidl:{" "}
-                  {buidl.amountRequested - buidl.amountFundedTillNow}
+                  {buidl.amountRequested - buidl.amountRaised}
                 </Text>
                 <Text fontSize="xs" color="gray.300">
                   Amount buidl had requested in total: {buidl.amountRequested}
                 </Text>
                 <Text fontSize="xs" color="gray.300">
-                  Amount buidl has got in funding till now:{" "}
-                  {buidl.amountFundedTillNow}
-                </Text>{" "}
+                  Amount buidl has got in funding till now: {buidl.amountRaised}
+                </Text>
               </VStack>
 
               <FormControl isRequired isInvalid={errors.amount ? true : false}>
@@ -231,9 +231,15 @@ const DepositTokensModal = ({
                 )}
               </FormControl>
 
-              <Button isLoading={isLoading} type="submit">
-                Fund
-              </Button>
+              {session?.user?.name && publicKey ? (
+                <Button isLoading={isLoading} type="submit">
+                  Fund
+                </Button>
+              ) : (
+                <ConnectWallet callbackUrl={callbackUrl}>
+                  Connect Wallet
+                </ConnectWallet>
+              )}
             </VStack>
           </ModalBody>
         </ModalContent>
