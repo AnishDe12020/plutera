@@ -8,47 +8,20 @@ export default async function handler(
   res: NextApiResponse<any>
 ) {
     if (req.method === "POST") { 
-    const data = {
+      const data = {
         createdAt: Date.now().toString(),
         updatedAt: Date.now().toString(),
-        name: req.body.name,
-        description: req.body.description,
-        url: req.body.description,
         pubkey: req.body.pubkey,
-        twitter: req.body.twitter,
-        github: req.body.github,
-        amountRequested: req.body.amountrequested,
-        amountRaised: req.body.amountraised,
-        token: req.body.token,
-        updatesTillNow: 0,
+        name: req.body.name,
+        email: req.body.email,
         avatarUrl: req.body.avatarurl,
-        bannerUrl: req.body.bannerurl,
-        Goal: [],
-        Update: [],
-        ownerId: req.body.ownerid,
-        owner: req.body.ownerid,
-        Proposal: req.body.proposals || []
+        twitter: req.body.twitter,
+        buidls: []
       };
-      data.owner = await prisma.user.findUnique({
-        where: {
-          id: data.ownerId,
-        },
-      })
-      data.owner.builds.push(data)
-      const updateUser = await prisma.user.update({
-        where: {
-          id: data.ownerId,
-        },
-        data: {
-          buidlData: data.owner.buidls,
-        },
-      })
-    const buidlData = await prisma.user.create(data)
-    console.log(buidlData)
-
+    const user = await prisma.user.create({data: data})
     res.status(200).json({
         status: 200,
-        data: buidlData,
+        data: user,
     })
     }
 }
