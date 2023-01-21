@@ -16,6 +16,7 @@ const useSocialProtocol = () => {
 
   const socialProtocol = useAsyncMemo(async () => {
     const data = new SocialProtocol(wallet, null, options).init();
+    return data;
   }, []);
 
   return {

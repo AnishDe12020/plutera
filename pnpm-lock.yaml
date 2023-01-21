@@ -29,6 +29,7 @@ specifiers:
   eslint: 8.31.0
   eslint-config-next: 13.1.1
   framer-motion: ^8.4.0
+  graphql: ^16.6.0
   hamburger-react: ^2.5.0
   http: 0.0.1-security
   lucide-react: 0.105.0-alpha.4
@@ -60,7 +61,7 @@ dependencies:
   '@solana/wallet-adapter-react-ui': 0.9.27_t5z6kkqlain2netts3o5pq37jy
   '@solana/wallet-adapter-wallets': 0.19.10_t5z6kkqlain2netts3o5pq37jy
   '@solana/web3.js': 1.73.0
-  '@spling/social-protocol': 1.5.3_react@18.2.0
+  '@spling/social-protocol': 1.5.3_onqnqwb3ubg5opvemcqf7c2qhy
   '@types/cookie': 0.5.1
   '@types/node': 18.11.18
   '@types/react': 18.0.26
@@ -71,6 +72,7 @@ dependencies:
   eslint: 8.31.0
   eslint-config-next: 13.1.1_iukboom6ndih5an6iafl45j2fe
   framer-motion: 8.4.0_biqbaboplfbrettd7655fr4n2y
+  graphql: 16.6.0
   hamburger-react: 2.5.0_react@18.2.0
   http: 0.0.1-security
   lucide-react: 0.105.0-alpha.4_react@18.2.0
@@ -1463,10 +1465,12 @@ packages:
       - react-dom
     dev: false
 
-  /@graphql-typed-document-node/core/3.1.1:
+  /@graphql-typed-document-node/core/3.1.1_graphql@16.6.0:
     resolution: {integrity: sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      graphql: 16.6.0
     dev: false
 
   /@hapi/bourne/2.1.0:
@@ -2818,7 +2822,7 @@ packages:
       uuid: 8.3.2
     dev: false
 
-  /@spling/social-protocol/1.5.3_react@18.2.0:
+  /@spling/social-protocol/1.5.3_onqnqwb3ubg5opvemcqf7c2qhy:
     resolution: {integrity: sha512-2SL7T5YUo/nL/ClA6uC/GznG20c4NFFjshIM6lFETkhTFFLwHQSh8aFTEAlS9fFFOCBV2aDj8SKSIfP8/pD7dA==}
     dependencies:
       '@project-serum/anchor': 0.26.0
@@ -2827,7 +2831,7 @@ packages:
       axios: 0.27.2
       bs58: 5.0.0
       dayjs: 1.11.7
-      graphql-request: 5.1.0
+      graphql-request: 5.1.0_graphql@16.6.0
       react-native-shadow-drive: 3.1.5_react@18.2.0
     optionalDependencies:
       react-native-fs: 2.20.0
@@ -5708,17 +5712,23 @@ packages:
     resolution: {integrity: sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==}
     dev: false
 
-  /graphql-request/5.1.0:
+  /graphql-request/5.1.0_graphql@16.6.0:
     resolution: {integrity: sha512-0OeRVYigVwIiXhNmqnPDt+JhMzsjinxHE7TVy3Lm6jUzav0guVcL0lfSbi6jVTRAxcbwgyr6yrZioSHxf9gHzw==}
     peerDependencies:
       graphql: 14 - 16
     dependencies:
-      '@graphql-typed-document-node/core': 3.1.1
+      '@graphql-typed-document-node/core': 3.1.1_graphql@16.6.0
       cross-fetch: 3.1.5
       extract-files: 9.0.0
       form-data: 3.0.1
+      graphql: 16.6.0
     transitivePeerDependencies:
       - encoding
+    dev: false
+
+  /graphql/16.6.0:
+    resolution: {integrity: sha512-KPIBPDlW7NxrbT/eh4qPXz5FiFdL5UbaA0XUNz2Rp3Z3hqBSkbj0GVjwFDztsWVauZUWsbKHgMg++sk8UX0bkw==}
+    engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
     dev: false
 
   /hamburger-react/2.5.0_react@18.2.0:

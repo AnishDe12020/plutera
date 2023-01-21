@@ -56,6 +56,7 @@ export const authOptions = (
             await prisma.user.create({
               data: {
                 pubkey: credentials.publicKey,
+                name: credentials.name,
               },
             });
           }

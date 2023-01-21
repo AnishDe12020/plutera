@@ -30,6 +30,10 @@ import {
   chakra,
   useClipboard,
   Flex,
+  Spinner,
+  FormControl,
+  FormLabel,
+  Input,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
@@ -46,9 +50,17 @@ import {
   Wallet,
 } from "lucide-react";
 import { truncatePubkey } from "../utils/truncate";
+import { useQuery } from "react-query";
+import { User } from "@prisma/client";
+import { useForm } from "react-hook-form";
+import useSocialProtocol from "../hooks/useSocialProtocol";
 
 interface ConnectWalletProps extends ButtonProps {
   callbackUrl?: string;
+}
+
+interface SignUpForm {
+  username: string;
 }
 
 const ConnectWallet = forwardRef<ConnectWalletProps, "button">(
@@ -60,6 +72,8 @@ const ConnectWallet = forwardRef<ConnectWalletProps, "button">(
     } = useDisclosure();
 
     const { select, publicKey, disconnect, signMessage, wallets } = useWallet();
+
+    // const { socialProtocol } = useSocialProtocol();
 
     const {
       isOpen: isCollapsedWalletsOpen,
@@ -75,6 +89,18 @@ const ConnectWallet = forwardRef<ConnectWalletProps, "button">(
       hasCopied: hasCopiedPubkey,
       setValue: setPubkey,
     } = useClipboard("");
+
+    const { data: user, isLoading: isLoadingUser } = useQuery<User | null>(
+      "user",
+      () => {
+        return null;
+      },
+      {
+        enabled: !!publicKey,
+      }
+    );
+
+    const { register, handleSubmit } = useForm<SignUpForm>();
 
     useEffect(() => {
       if (!publicKey) return;
@@ -102,37 +128,45 @@ const ConnectWallet = forwardRef<ConnectWalletProps, "button">(
       [disconnect]
     );
 
-    const login = useCallback(async () => {
-      setIsSigningIn(true);
-      const res = await axios.get("/api/nonce");
+    const login = useCallback(
+      async (name?: string) => {
+        // if (!socialProtocol) return;
 
-      if (res.status != 200) {
-        console.error("failed to fetch nonce");
-        return;
-      }
+        setIsSigningIn(true);
+        const res = await axios.get("/api/nonce");
 
-      const { nonce } = res.data;
+        if (res.status != 200) {
+          console.error("failed to fetch nonce");
+          return;
+        }
 
-      const message = `Sign this message for authenticating with your wallet. Nonce: ${nonce}`;
-      const encodedMessage = new TextEncoder().encode(message);
+        const { nonce } = res.data;
 
-      if (!signMessage) {
-        console.error("signMessage is not defined");
-        return;
-      }
+        const message = `Sign this message for authenticating with your wallet. Nonce: ${nonce}`;
+        const encodedMessage = new TextEncoder().encode(message);
 
-      const signedMessage = await signMessage(encodedMessage);
+        if (!signMessage) {
+          console.error("signMessage is not defined");
+          return;
+        }
 
-      await signIn("credentials", {
-        publicKey: publicKey?.toBase58(),
-        signature: base58.encode(signedMessage),
-        callbackUrl: callbackUrl
-          ? `${window.location.origin}/${callbackUrl}`
-          : `${window.location.origin}/`,
-      });
+        const signedMessage = await signMessage(encodedMessage);
 
-      setIsSigningIn(false);
-    }, [signMessage, publicKey, callbackUrl]);
+        await signIn("credentials", {
+          publicKey: publicKey?.toBase58(),
+          signature: base58.encode(signedMessage),
+          callbackUrl: callbackUrl
+            ? `${window.location.origin}/${callbackUrl}`
+            : `${window.location.origin}/`,
+          name: name,
+        });
+
+        // await socialProtocol.createUser(name, null, null, null);
+
+        setIsSigningIn(false);
+      },
+      [signMessage, publicKey, callbackUrl]
+    );
 
     return publicKey && session ? (
       <Popover>
@@ -208,9 +242,39 @@ const ConnectWallet = forwardRef<ConnectWalletProps, "button">(
             <ModalBody p={2}>
               <VStack>
                 {publicKey ? (
-                  <Button onClick={login} isLoading={isSigningIn}>
-                    Sign Message
-                  </Button>
+                  <>
+                    {isLoadingUser ? (
+                      <Spinner />
+                    ) : user ? (
+                      <Button
+                        onClick={async () => {
+                          await login();
+                        }}
+                        isLoading={isSigningIn}
+                      >
+                        Sign Message
+                      </Button>
+                    ) : (
+                      <VStack
+                        as="form"
+                        gap={4}
+                        onSubmit={handleSubmit(async (data: SignUpForm) => {
+                          console.log(data);
+                          await login(data.username);
+                        })}
+                      >
+                        <FormControl isRequired>
+                          <FormLabel>Username</FormLabel>
+                          <Input
+                            {...register("username", { required: true })}
+                          />
+                        </FormControl>
+                        <Button type="submit" isLoading={isSigningIn}>
+                          Sign Up
+                        </Button>
+                      </VStack>
+                    )}
+                  </>
                 ) : (
                   <>
                     <VStack my={4} gap={4}>
