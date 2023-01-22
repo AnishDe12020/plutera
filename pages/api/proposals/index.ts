@@ -59,7 +59,7 @@ const handleCreateProposal = async (
     return res.status(400).json({ message: "Missing endTimestamp" });
   }
 
-  if (!req.body.withdrawerAddresss) {
+  if (!req.body.withdrawerAddress) {
     return res.status(400).json({ message: "Missing withdrawerAddress" });
   }
 

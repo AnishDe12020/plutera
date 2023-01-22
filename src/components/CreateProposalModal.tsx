@@ -113,7 +113,7 @@ const CreateProposalModal = ({
         buidlId: buidl.id,
         name: data.name,
         purpose: data.purpose,
-        amount: data.amount,
+        amount: Number(data.amount),
         endTimestamp: new Date().getTime() + data.numberOfDays * 24 * 60 * 60,
         withdrawerAddress: data.withdrawerAddresss,
         pubkey: proposalAccountKeypair.publicKey.toBase58(),
@@ -171,7 +171,7 @@ const CreateProposalModal = ({
               </FormControl>
 
               <FormControl isRequired isInvalid={errors.purpose ? true : false}>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>Purpose</FormLabel>
                 <Textarea
                   {...register("purpose", {
                     required: {
@@ -199,6 +199,10 @@ const CreateProposalModal = ({
                   })}
                   type="number"
                 />
+                <FormHelperText>
+                  Max: {buidl.token.symbol} {buidl.amountRaised} as that is the
+                  amount of funding you have received
+                </FormHelperText>
                 {errors.amount && (
                   <FormErrorMessage>{errors.amount.message}</FormErrorMessage>
                 )}
