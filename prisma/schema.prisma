@@ -51,17 +51,18 @@ model Buidl {
 }
 
 model Proposal {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  name         String
-  purpose      String
-  amount       Int
-  upvotes      Int      @default(0)
-  downvotes    Int      @default(0)
-  endTimestamp Int
-  buidl        Buidl    @relation(fields: [buidlId], references: [id])
-  buidlId      String   @db.ObjectId
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  name              String
+  purpose           String
+  amount            Int
+  upvotes           Int      @default(0)
+  downvotes         Int      @default(0)
+  endTimestamp      Int
+  withdrawerAddress String
+  buidl             Buidl    @relation(fields: [buidlId], references: [id])
+  buidlId           String   @db.ObjectId
 }
 
 model Update {
