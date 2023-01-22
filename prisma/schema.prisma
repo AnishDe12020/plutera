@@ -40,11 +40,11 @@ model Buidl {
   pubkey          String
   amountRequested Int?
   amountRaised    Int?
-  token           Token?     
-  updatesTillNow  Int?      @default(0)
+  token           Token?
+  updatesTillNow  Int?       @default(0)
   owner           User       @relation(fields: [ownerId], references: [id])
   ownerId         String     @db.ObjectId
-  Proposal        Proposal[] 
+  Proposal        Proposal[]
   Update          Update[]
   Goal            Goal[]
 }
