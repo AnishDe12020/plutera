@@ -15,7 +15,9 @@ import {
   ButtonProps,
   useDisclosure,
   Icon,
+  useToast,
 } from "@chakra-ui/react";
+import axios from "axios";
 import { PencilIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useCallback } from "react";
@@ -51,6 +53,8 @@ const EditBuidlModal = ({
     },
   });
 
+  const toast = useToast();
+
   const handleEditBuidl = useCallback(
     async (data: EditBuidlForm) => {
       if (!session?.user?.name) {
@@ -59,9 +63,25 @@ const EditBuidlModal = ({
 
       console.log(data);
 
-      // TODO: edit buidl on db
+      const {
+        data: { buidl: updatedBuidl },
+      } = await axios.patch("/api/buidls/update", {
+        id: previousBuidl.id,
+        name: data.name,
+        description: data.description,
+      });
+
+      console.log("updated buidl: ", updatedBuidl);
+
+      toast({
+        title: "Buidl updated",
+        description: "Your buidl has been updated",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
     },
-    [session?.user?.name]
+    [session?.user?.name, toast]
   );
 
   const { mutate, isLoading } = useMutation(handleEditBuidl);

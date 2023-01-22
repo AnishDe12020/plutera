@@ -1,5 +1,6 @@
-import { Heading } from "@chakra-ui/react";
-import { GetServerSideProps } from "next";
+import { Box, Heading, Text, VStack } from "@chakra-ui/react";
+import { Buidl } from "@prisma/client";
+import { GetServerSideProps, NextPage } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 
@@ -9,18 +10,50 @@ import DepositTokensModal from "../../src/components/DepositTokensModal";
 import EditBuidlModal from "../../src/components/EditBuidlModal";
 import CreaeUpdateModal from "../../src/components/PostUpdateModal";
 import VoteModal from "../../src/components/VoteModal";
+import { prisma } from "../../src/lib/db";
 
 import { authOptions } from "../api/auth/[...nextauth]";
 
-const DashboardPage = () => {
+interface DashboardPageProps {
+  buidls: Buidl[];
+}
+
+const DashboardPage: NextPage<DashboardPageProps> = ({ buidls }) => {
   const { data: session } = useSession();
 
   return (
-    <>
+    <VStack gap={8}>
       <Heading>Your Buidls</Heading>
-      {/* TODO: fetch builds on server side and display here */}
+
       <CreateBuidlModal>New Buidl</CreateBuidlModal>
-      <EditBuidlModal previousBuidl={{ name: "test", description: "desc" }}>
+
+      <VStack gap={4}>
+        {buidls.map((buidl) => (
+          <VStack
+            key={buidl.id}
+            border="1px solid"
+            borderColor="brand.tertiary"
+            bg="brand.secondary"
+            rounded="lg"
+            minW={["64", "md", "xl"]}
+            gap={4}
+            py={8}
+          >
+            <Heading fontSize="2xl">{buidl.name}</Heading>
+            <Text>{buidl.description}</Text>
+
+            <EditBuidlModal previousBuidl={buidl}>Edit Buidl</EditBuidlModal>
+
+            <CreateProposalModal buidl={buidl}>
+              Create Proposal
+            </CreateProposalModal>
+
+            <CreaeUpdateModal buidl={buidl}>Post Update</CreaeUpdateModal>
+          </VStack>
+        ))}
+      </VStack>
+
+      {/* <EditBuidlModal previousBuidl={{ name: "test", description: "desc" }}>
         Edit Buidl
       </EditBuidlModal>
       <CreateProposalModal buidl={{ address: "gwerhiogh", token: "USDC" }}>
@@ -49,8 +82,8 @@ const DashboardPage = () => {
         }}
       >
         Deposit Tokens
-      </DepositTokensModal>
-    </>
+      </DepositTokensModal> */}
+    </VStack>
   );
 };
 
@@ -70,8 +103,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
+  const buidls = await prisma.buidl.findMany({
+    where: {
+      owner: {
+        pubkey: session.user.name,
+      },
+    },
+  });
+
   return {
-    props: {},
+    props: { buidls: JSON.parse(JSON.stringify(buidls)) },
   };
 };
 
