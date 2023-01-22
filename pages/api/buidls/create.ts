@@ -31,7 +31,7 @@ export default async function handler(
       return;
     }
 
-    if (!req.body.ownerId) {
+    if (!req.body.ownerPubkey) {
       res.status(400).json({
         status: 400,
         message: "Owner id is required",
@@ -41,9 +41,10 @@ export default async function handler(
 
     let buidlData = await prisma.buidl.create({
       data: {
+        id: req.body.id,
         name: req.body.name,
         description: req.body.description,
-        url: req.body.description,
+        url: req.body.url,
         pubkey: req.body.pubkey,
         twitter: req.body.twitter,
         github: req.body.github,
@@ -56,7 +57,7 @@ export default async function handler(
         },
         owner: {
           connect: {
-            id: req.body.ownerId,
+            pubkey: req.body.ownerPubkey,
           },
         },
         updatesTillNow: 0,
@@ -67,7 +68,7 @@ export default async function handler(
 
     res.status(200).json({
       status: 200,
-      data: buidlData,
+      buidl: buidlData,
     });
   }
 }

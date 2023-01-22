@@ -25,6 +25,7 @@ specifiers:
   '@types/react-dom': 18.0.10
   axios: ^1.2.2
   bs58: ^5.0.0
+  bson: ^4.7.2
   cookie: ^0.5.0
   eslint: 8.31.0
   eslint-config-next: 13.1.1
@@ -68,6 +69,7 @@ dependencies:
   '@types/react-dom': 18.0.10
   axios: 1.2.2
   bs58: 5.0.0
+  bson: 4.7.2
   cookie: 0.5.0
   eslint: 8.31.0
   eslint-config-next: 13.1.1_iukboom6ndih5an6iafl45j2fe
@@ -4163,6 +4165,13 @@ packages:
       bs58: 4.0.1
       create-hash: 1.2.0
       safe-buffer: 5.2.1
+    dev: false
+
+  /bson/4.7.2:
+    resolution: {integrity: sha512-Ry9wCtIZ5kGqkJoi6aD8KjxFZEx78guTQDnpXWiNthsxzrxAK/i8E6pCHAIZTbaEFWcOCvbecMukfK7XUvyLpQ==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      buffer: 5.7.1
     dev: false
 
   /buffer-alloc-unsafe/1.1.0:

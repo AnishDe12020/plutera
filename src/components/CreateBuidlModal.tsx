@@ -18,8 +18,12 @@ import {
   ButtonProps,
   useDisclosure,
   Icon,
+  useToast,
 } from "@chakra-ui/react";
+import { useConnection } from "@solana/wallet-adapter-react";
 import { Keypair, PublicKey } from "@solana/web3.js";
+import axios from "axios";
+import { ObjectId } from "bson";
 import { PlusIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useCallback } from "react";
@@ -33,7 +37,6 @@ import TokenRadio from "./TokenRadio";
 interface NewBuidlForm {
   name: string;
   description?: string;
-  logoUrl?: string;
   amount: number;
   token: Token;
 }
@@ -46,6 +49,7 @@ const CreateBuidlModal = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { program } = useProgram();
+  const { connection } = useConnection();
 
   const {
     control,
@@ -74,6 +78,8 @@ const CreateBuidlModal = ({
     value: selectedToken,
   });
 
+  const toast = useToast();
+
   const handleCreateBuidl = useCallback(
     async (data: NewBuidlForm) => {
       if (!program) {
@@ -88,9 +94,7 @@ const CreateBuidlModal = ({
 
       const token = data.token === Token.USDC ? USDC_TOKEN : BONK_TOKEN;
 
-      // TODO: create buidl on db and store the id in db_id
-
-      // let db_id = "test";
+      const db_id = new ObjectId().toString();
 
       const buidlAccountKeypair = Keypair.generate();
 
@@ -103,18 +107,46 @@ const CreateBuidlModal = ({
         program.programId
       );
 
-      // program.methods
-      //   .initializeBuidl(db_id)
-      //   .accounts({
-      //     buidlAccount: buidlAccountKeypair.publicKey,
-      // mint: token.address,
-      //     owner: session.user.name,
-      //     vault: vaultPDAAddress,
-      //   })
-      //   .signers([buidlAccountKeypair])
-      //   .rpc();
+      const sig = await program.methods
+        .initializeBuidl(db_id)
+        .accounts({
+          buidlAccount: buidlAccountKeypair.publicKey,
+          mint: token.address,
+          owner: session.user.name,
+          vault: vaultPDAAddress,
+        })
+        .signers([buidlAccountKeypair])
+        .rpc();
+
+      await connection.confirmTransaction(sig);
+
+      const {
+        data: { buidl },
+      } = await axios.post("/api/buidls/create", {
+        id: db_id,
+        name: data.name,
+        description: data.description,
+        amountRequested: data.amount,
+        token: {
+          address: token.address,
+          symbol: token.symbol,
+          logoURI: token.logoURI,
+        },
+        pubkey: buidlAccountKeypair.publicKey.toBase58(),
+        ownerPubkey: session.user.name,
+      });
+
+      console.log("created buidl", buidl);
+
+      toast({
+        title: "Buidl created",
+        description: "Your buidl has been created",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
     },
-    [program, session?.user?.name]
+    [program, session?.user?.name, connection, toast]
   );
 
   const { mutate, isLoading } = useMutation(handleCreateBuidl);
