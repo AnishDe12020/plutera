@@ -16,17 +16,20 @@ import {
   ButtonProps,
   useDisclosure,
   Icon,
+  useToast,
 } from "@chakra-ui/react";
+import { Buidl } from "@prisma/client";
 import { BN } from "@project-serum/anchor";
+import { useConnection } from "@solana/wallet-adapter-react";
 import { Keypair, PublicKey } from "@solana/web3.js";
+import axios from "axios";
+import { ObjectId } from "bson";
 import { PlusIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import useProgram from "../hooks/useProgram";
-import { BONK_TOKEN, USDC_TOKEN } from "../lib/constants";
-import { Token } from "../types/model";
 
 interface NewProposalForm {
   name: string;
@@ -37,7 +40,7 @@ interface NewProposalForm {
 }
 
 interface CreateProposalModalProps extends ButtonProps {
-  buidl: any; // TODO: type this
+  buidl: Buidl;
 }
 
 const CreateProposalModal = ({
@@ -47,8 +50,11 @@ const CreateProposalModal = ({
 }: CreateProposalModalProps) => {
   const { data: session } = useSession();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { connection } = useConnection();
 
   const { program } = useProgram();
+
+  const toast = useToast();
 
   const {
     control,
@@ -69,40 +75,61 @@ const CreateProposalModal = ({
 
       console.log(data);
 
-      // TODO: create buidl on db and store the id in db_id
-
-      let db_id = "test";
-
-      const token = buidl.token === Token.USDC ? USDC_TOKEN : BONK_TOKEN;
+      const db_id = new ObjectId().toString();
 
       const proposalAccountKeypair = Keypair.generate();
 
       const [vaultPDAAddress] = PublicKey.findProgramAddressSync(
         [
           Buffer.from("vault"),
-          new PublicKey(buidl.address).toBuffer(),
-          new PublicKey(token.address).toBuffer(),
+          new PublicKey(buidl.pubkey).toBuffer(),
+          new PublicKey(buidl.token.address).toBuffer(),
         ],
         program.programId
       );
 
-      // program.methods
-      //   .createProposal(
-      //     new BN(data.amount),
-      //     db_id,
-      //     new PublicKey(data.withdrawerAddresss),
-      //     new BN(7)
-      //   )
-      //   .accounts({
-      //     buidlAccount: new PublicKey(buidl.address),
-      //     proposalAccount: proposalAccountKeypair.publicKey,
-      //     payer: new PublicKey(session.user.name),
-      //     vault: vaultPDAAddress,
-      //   })
-      //   .signers([proposalAccountKeypair])
-      //   .rpc();
+      const sig = await program.methods
+        .createProposal(
+          new BN(data.amount),
+          db_id,
+          new PublicKey(data.withdrawerAddresss),
+          new BN(data.numberOfDays)
+        )
+        .accounts({
+          buidlAccount: new PublicKey(buidl.pubkey),
+          proposalAccount: proposalAccountKeypair.publicKey,
+          payer: new PublicKey(session.user.name),
+          vault: vaultPDAAddress,
+        })
+        .signers([proposalAccountKeypair])
+        .rpc();
+
+      await connection.confirmTransaction(sig);
+
+      const {
+        data: { proposal },
+      } = await axios.post("/api/proposals", {
+        id: db_id,
+        buidlId: buidl.id,
+        name: data.name,
+        purpose: data.purpose,
+        amount: data.amount,
+        endTimestamp: new Date().getTime() + data.numberOfDays * 24 * 60 * 60,
+        withdrawerAddress: data.withdrawerAddresss,
+        pubkey: proposalAccountKeypair.publicKey.toBase58(),
+      });
+
+      console.log("created proposal", proposal);
+
+      toast({
+        title: "Proposal created",
+        description: "Your proposal has been created",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
     },
-    [program, session?.user?.name, buidl]
+    [program, session?.user?.name, buidl, connection, toast]
   );
 
   const { mutate, isLoading } = useMutation(handleCreateProposal);

@@ -40,7 +40,7 @@ model Buidl {
   pubkey          String
   amountRequested Int?
   amountRaised    Int?
-  token           Token?
+  token           Token
   updatesTillNow  Int?       @default(0)
   owner           User       @relation(fields: [ownerId], references: [id])
   ownerId         String     @db.ObjectId
@@ -61,6 +61,7 @@ model Proposal {
   downvotes         Int      @default(0)
   endTimestamp      Int
   withdrawerAddress String
+  pubkey            String
   buidl             Buidl    @relation(fields: [buidlId], references: [id])
   buidlId           String   @db.ObjectId
 }
@@ -72,6 +73,7 @@ model Update {
   name         String
   description  String
   updateNumber Int
+  pubkey       String
   buidl        Buidl    @relation(fields: [buidlId], references: [id])
   buidlId      String   @db.ObjectId
 }

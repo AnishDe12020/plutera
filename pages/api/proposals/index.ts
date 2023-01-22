@@ -63,8 +63,13 @@ const handleCreateProposal = async (
     return res.status(400).json({ message: "Missing withdrawerAddress" });
   }
 
+  if (!req.body.pubkey) {
+    return res.status(400).json({ message: "Missing pubkey" });
+  }
+
   const proposal = await prisma.proposal.create({
     data: {
+      id: req.body.id,
       buidl: {
         connect: {
           id: req.body.buidlId,
@@ -75,6 +80,7 @@ const handleCreateProposal = async (
       amount: req.body.amount,
       endTimestamp: req.body.endTimestamp,
       withdrawerAddress: req.body.withdrawerAddress,
+      pubkey: req.body.pubkey,
     },
   });
 
