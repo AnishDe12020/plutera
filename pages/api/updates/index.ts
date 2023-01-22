@@ -55,6 +55,10 @@ const handleCreateUpdate = async (
     return res.status(400).json({ messagwe: "Missing updateNumber" });
   }
 
+  if (!req.body.pubkey) {
+    return res.status(400).json({ messagwe: "Missing pubkey" });
+  }
+
   const update = await prisma.update.create({
     data: {
       buidl: {
@@ -65,6 +69,7 @@ const handleCreateUpdate = async (
       name: req.body.name,
       description: req.body.description,
       updateNumber: req.body.updateNumber,
+      pubkey: req.body.pubkey,
     },
   });
 

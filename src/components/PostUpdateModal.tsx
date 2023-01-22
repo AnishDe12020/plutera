@@ -16,9 +16,14 @@ import {
   ButtonProps,
   useDisclosure,
   Icon,
+  useToast,
 } from "@chakra-ui/react";
+import { Buidl } from "@prisma/client";
 import { BN } from "@project-serum/anchor";
+import { useConnection } from "@solana/wallet-adapter-react";
 import { Keypair, PublicKey } from "@solana/web3.js";
+import axios from "axios";
+import { ObjectId } from "bson";
 import { Anchor, PlusIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useCallback } from "react";
@@ -32,7 +37,7 @@ interface NewUpdateForm {
 }
 
 interface CreateUpdateModalProps extends ButtonProps {
-  buidl: any; // TODO: type this
+  buidl: Buidl;
 }
 
 const CreaeUpdateModal = ({
@@ -44,6 +49,9 @@ const CreaeUpdateModal = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { program } = useProgram();
+
+  const toast = useToast();
+  const { connection } = useConnection();
 
   const {
     control,
@@ -64,23 +72,44 @@ const CreaeUpdateModal = ({
 
       console.log(data);
 
-      // TODO: create buidl on db and store the id in db_id
-
-      let db_id = "test";
+      let db_id = new ObjectId().toString();
 
       const updateAccountKeypair = Keypair.generate();
 
-      //   program.methods
-      //     .postUpdate(db_id, new BN(buidl.updatesTillNow).add(1))
-      //     .accounts({
-      //       buidlAccount: new PublicKey(buidl.address),
-      //       payer: new PublicKey(session.user.name),
-      //       updateAccount: updateAccountKeypair.publicKey,
-      //     })
-      //     .signers([updateAccountKeypair])
-      //     .rpc();
+      const sig = await program.methods
+        .postUpdate(db_id, new BN(buidl.updatesTillNow || 0).add(new BN(1)))
+        .accounts({
+          buidlAccount: new PublicKey(buidl.pubkey),
+          payer: new PublicKey(session.user.name),
+          updateAccount: updateAccountKeypair.publicKey,
+        })
+        .signers([updateAccountKeypair])
+        .rpc();
+
+      await connection.confirmTransaction(sig);
+
+      const {
+        data: { update },
+      } = await axios.post("/api/updates", {
+        id: db_id,
+        buidlId: buidl.id,
+        name: data.name,
+        description: data.description,
+        updateNumber: buidl.updatesTillNow || 0 + 1,
+        pubkey: updateAccountKeypair.publicKey.toBase58(),
+      });
+
+      console.log("created update", update);
+
+      toast({
+        title: "Update created",
+        description: "Your update has been created",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
     },
-    [program, session?.user?.name, buidl]
+    [program, session?.user?.name, buidl, connection, toast]
   );
 
   const { mutate, isLoading } = useMutation(handlePostUpdate);
