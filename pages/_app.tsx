@@ -84,7 +84,7 @@ export default function App({
                   top="48"
                   opacity="0.6"
                 />
-                <chakra.main zIndex="1" mt={16} px={[4, 8, 16, 32]} h="90vh">
+                <chakra.main zIndex="1" mt={8} px={[4, 8, 16, 32]} h="90vh">
                   <Component {...pageProps} />
                 </chakra.main>
               </SessionProvider>

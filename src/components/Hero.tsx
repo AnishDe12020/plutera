@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import {
   Box,
   Heading,
@@ -9,71 +8,67 @@ import {
   Icon,
   useColorModeValue,
   createIcon,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
 export default function Hero() {
   return (
     <>
-      <Head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap"
-          rel="stylesheet"
-        />
-      </Head>
-      <Container maxW={'3xl'}>
+      <Container maxW={"3xl"}>
         <Stack
-          as={Box}
-          textAlign={'center'}
+          textAlign={"center"}
           spacing={{ base: 8, md: 14 }}
-          py={{ base: 20, md: 36 }}>
+          py={{ base: 20, md: 36 }}
+        >
           <Heading
             fontWeight={900}
-            fontSize={{ base: '2xl', sm: '4xl', md: '6xl' }}
-            lineHeight={'110%'}>
+            fontSize={{ base: "2xl", sm: "4xl", md: "6xl" }}
+            lineHeight={"110%"}
+          >
             Build and raise money from <br />
-            <Text as={'span'} color={'purple.300'}>
+            <Text as={"span"} color={"purple.300"}>
               your audience
             </Text>
           </Heading>
-          <Text fontWeight={500} color={'gray.500'}>
-            Raise money through our decentralised platform, roll out weekly updates and milestones, get nfts as reward,
-            supports BONK,SOL,USDC
+          <Text fontWeight={500} color={"gray.500"}>
+            Raise money through our decentralised platform, roll out weekly
+            updates and milestones, get nfts as reward, supports BONK & USDC
           </Text>
           <Stack
-            direction={'column'}
+            direction={"column"}
             spacing={3}
-            align={'center'}
-            alignSelf={'center'}
-            position={'relative'}>
+            align={"center"}
+            alignSelf={"center"}
+            position={"relative"}
+          >
             <Button
-              colorScheme={'purple'}
-              bg={'purple.300'}
-              rounded={'full'}
+              colorScheme={"purple"}
+              bg={"purple.300"}
+              rounded={"full"}
               px={6}
               _hover={{
-                bg: 'purple.500',
-              }}>
+                bg: "purple.500",
+              }}
+            >
               Get Started
             </Button>
-            <Button variant={'link'} colorScheme={'blue'} size={'sm'}>
-              Learn more
-            </Button>
+
             <Box>
               <Icon
                 as={Arrow}
-                color={useColorModeValue('gray.200', 'gray.300')}
+                color={useColorModeValue("gray.200", "gray.300")}
                 w={71}
-                position={'absolute'}
+                position={"absolute"}
                 right={-71}
-                top={'10px'}
+                top={"10px"}
               />
               <Text
-                fontSize={'lg'}
-                fontFamily={'Caveat'}
-                position={'absolute'}
-                right={'-125px'}
-                top={'-15px'}
-                transform={'rotate(10deg)'}>
+                fontSize={"lg"}
+                fontFamily={"Caveat"}
+                position={"absolute"}
+                right={"-125px"}
+                top={"-15px"}
+                transform={"rotate(10deg)"}
+              >
                 Setup your project!
               </Text>
             </Box>
@@ -85,8 +80,8 @@ export default function Hero() {
 }
 
 const Arrow = createIcon({
-  displayName: 'Arrow',
-  viewBox: '0 0 72 24',
+  displayName: "Arrow",
+  viewBox: "0 0 72 24",
   path: (
     <path
       fillRule="evenodd"
