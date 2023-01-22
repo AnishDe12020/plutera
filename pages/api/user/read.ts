@@ -6,10 +6,13 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) {
+  if (!req.query.id)
+    return res.status(400).json({ status: 400, message: "Bad request" });
+
   if (req.method === "GET") {
     const userData = await prisma.user.findUnique({
       where: {
-        id: req.body.id,
+        id: req.query.id as string,
       },
     });
     res.status(200).json({
