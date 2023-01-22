@@ -44,6 +44,7 @@ model Buidl {
   updatesTillNow  Int?       @default(0)
   owner           User       @relation(fields: [ownerId], references: [id])
   ownerId         String     @db.ObjectId
+  stage           Int        @default(0)
   Proposal        Proposal[]
   Update          Update[]
   Goal            Goal[]
