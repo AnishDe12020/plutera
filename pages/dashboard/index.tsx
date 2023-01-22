@@ -1,5 +1,14 @@
-import { Box, Heading, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Heading,
+  Icon,
+  Link,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { Buidl } from "@prisma/client";
+import { ExternalLink } from "lucide-react";
 import { GetServerSideProps, NextPage } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
@@ -49,6 +58,15 @@ const DashboardPage: NextPage<DashboardPageProps> = ({ buidls }) => {
             </CreateProposalModal>
 
             <CreaeUpdateModal buidl={buidl}>Post Update</CreaeUpdateModal>
+
+            <Button
+              as={Link}
+              isExternal
+              leftIcon={<Icon as={ExternalLink} />}
+              href={`/buidls/${buidl.id}`}
+            >
+              Go to public page
+            </Button>
           </VStack>
         ))}
       </VStack>

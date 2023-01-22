@@ -48,12 +48,12 @@ export default async function handler(
         pubkey: req.body.pubkey,
         twitter: req.body.twitter,
         github: req.body.github,
-        amountRequested: req.body.amountrequested || 0,
+        amountRequested: Number(req.body.amountRequested),
         amountRaised: 0,
         token: {
-          address: req.body.tokenaddress,
-          symbol: req.body.tokensymbol,
-          logoURI: req.body.tokenuri,
+          address: req.body.token.address,
+          symbol: req.body.token.symbol,
+          logoURI: req.body.token.logoURI,
         },
         owner: {
           connect: {

@@ -32,6 +32,7 @@ import {
 } from "@solana/spl-token";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { Keypair, PublicKey, Transaction } from "@solana/web3.js";
+import axios from "axios";
 import { LandmarkIcon, PlusIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useCallback } from "react";
@@ -88,7 +89,7 @@ const DepositTokensModal = ({
       const backerAccountPDA = PublicKey.findProgramAddressSync(
         [
           Buffer.from("backer"),
-          new PublicKey(buidl.token.address).toBuffer(),
+          new PublicKey(buidl.pubkey).toBuffer(),
           new PublicKey(session.user.name).toBuffer(),
         ],
         program.programId
@@ -161,17 +162,27 @@ const DepositTokensModal = ({
         program.programId
       );
 
-      //   program.methods
-      //     .deposit(new BN(data.amount))
-      //     .accounts({
-      //       buidlAccount: new PublicKey(buidl.address),
-      //       backerAccount: backerAccountPDA,
-      //       depositor: new PublicKey(session.user.name),
-      //       depositorTokenAccount: depositorTokenAccountAddress,
-      //       mint: new PublicKey(token.address),
-      //       vault: vaultPDAAddress,
-      //     })
-      //     .rpc();
+      console.log("dep", depositorTokenAccountAddress.toBase58());
+      console.log("vault", vaultPDAAddress.toBase58());
+
+      const sig = await program.methods
+        .deposit(new BN(data.amount))
+        .accounts({
+          buidlAccount: new PublicKey(buidl.pubkey),
+          backerAccount: backerAccountPDA,
+          depositor: new PublicKey(session.user.name),
+          depositorTokenAccount: depositorTokenAccountAddress,
+          mint: new PublicKey(buidl.token.address),
+          vault: vaultPDAAddress,
+        })
+        .rpc();
+
+      await connection.confirmTransaction(sig);
+
+      await axios.patch("/api/buidls/update", {
+        amountRaised: Number(buidl.amountRaised) + Number(data.amount),
+        id: buidl.id,
+      });
     },
     [program, session?.user?.name, buidl, connection, sendTransaction, toast]
   );

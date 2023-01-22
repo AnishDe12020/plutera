@@ -66,44 +66,21 @@ const BuidlPage = ({ buidl }: BuidlPageProps) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const id = context.query.id;
 
-  //   const buidl = await prisma.buidl.findUnique({
-  //     where: {
-  //       id: id as string,
-  //     },
-  //   });
-
-  //   if (!buidl) {
-  //     return {
-  //       notFound: true,
-  //     };
-  //   }
-
-  const dummyBuidl: Buidl = {
-    id: "1",
-    name: "Weather station",
-    description:
-      "Small portable battery-powered device that connects to the internet and measures temperature, humidity, and air pressure.",
-    amountRaised: 1000,
-    amountRequested: 10000,
-    createdAt: new Date(),
-    ownerId: "1",
-    updatesTillNow: 5,
-    updatedAt: new Date(),
-    url: "https://buidlhub.com",
-    github: "https://github.com",
-    twitter: "https://twitter.com",
-    pubkey: "0x123",
-    token: {
-      address: "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
-      logoURI:
-        "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
-      symbol: "USDC",
+  const buidl = await prisma.buidl.findUnique({
+    where: {
+      id: id as string,
     },
-  };
+  });
+
+  if (!buidl) {
+    return {
+      notFound: true,
+    };
+  }
 
   return {
     props: {
-      buidl: JSON.parse(JSON.stringify(dummyBuidl)),
+      buidl: JSON.parse(JSON.stringify(buidl)),
     },
   };
 };

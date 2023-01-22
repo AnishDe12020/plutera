@@ -38,8 +38,8 @@ model Buidl {
   github          String?
   twitter         String?
   pubkey          String
-  amountRequested Int?
-  amountRaised    Int?
+  amountRequested Int
+  amountRaised    Int
   token           Token
   updatesTillNow  Int?       @default(0)
   owner           User       @relation(fields: [ownerId], references: [id])

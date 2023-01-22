@@ -18,7 +18,7 @@ export default async function handler(
         url: req.body.description,
         twitter: req.body.twitter,
         github: req.body.github,
-        amountRaised: req.body.amountRaised,
+        amountRaised: Number(req.body.amountRaised),
         updatesTillNow: req.body.updates,
       },
     });
