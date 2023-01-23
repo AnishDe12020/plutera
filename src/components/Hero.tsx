@@ -9,6 +9,7 @@ import {
   useColorModeValue,
   createIcon,
 } from "@chakra-ui/react";
+import Link from 'next/link'
 
 export default function Hero() {
   return (
@@ -49,8 +50,9 @@ export default function Hero() {
               _hover={{
                 bg: "purple.500",
               }}
+              
             >
-              Get Started
+              <Link href="/dashboard">Blog Post</Link>
             </Button>
 
             <Box>
