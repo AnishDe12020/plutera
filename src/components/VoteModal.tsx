@@ -92,6 +92,7 @@ const VoteModal = ({
   return (
     <>
       <Button
+        color="white"
         leftIcon={<Icon as={TicketIcon} />}
         onClick={onOpen}
         {...otherProps}
@@ -110,6 +111,7 @@ const VoteModal = ({
               <Text>{proposal.purpose}</Text>
 
               <Button
+                color="white"
                 onClick={() => mutate(true)}
                 isLoading={isLoading}
                 h={12}
@@ -118,6 +120,7 @@ const VoteModal = ({
                 Approve ({proposal.upvotes} till now)
               </Button>
               <Button
+                color="white"
                 onClick={() => mutate(false)}
                 isLoading={isLoading}
                 h={12}

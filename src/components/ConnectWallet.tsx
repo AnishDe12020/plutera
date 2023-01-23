@@ -192,6 +192,7 @@ const ConnectWallet = forwardRef<ConnectWalletProps, "button">(
         <PopoverContent>
           <PopoverBody as={VStack} gap={4} py={4}>
             <Button
+              color="white"
               bg="brand.secondary"
               justifyContent="center"
               alignItems="center"
@@ -232,6 +233,7 @@ const ConnectWallet = forwardRef<ConnectWalletProps, "button">(
             </Button>
 
             <Button
+              color="white"
               colorScheme="red"
               leftIcon={<Icon as={LogOut} />}
               onClick={logout}
@@ -274,6 +276,7 @@ const ConnectWallet = forwardRef<ConnectWalletProps, "button">(
                       <Spinner />
                     ) : user ? (
                       <Button
+                        color="white"
                         onClick={async () => {
                           await login();
                         }}
@@ -316,6 +319,7 @@ const ConnectWallet = forwardRef<ConnectWalletProps, "button">(
                           .filter((wallet) => wallet.readyState === "Installed")
                           .map((wallet) => (
                             <Button
+                              color="white"
                               key={wallet.adapter.name}
                               onClick={() => select(wallet.adapter.name)}
                               leftIcon={
@@ -346,6 +350,7 @@ const ConnectWallet = forwardRef<ConnectWalletProps, "button">(
                           </Text>
 
                           <Button
+                            color="white"
                             isExternal
                             href="https://phantom.app"
                             as={Link}
@@ -392,6 +397,7 @@ const ConnectWallet = forwardRef<ConnectWalletProps, "button">(
                               )
                               .map((wallet) => (
                                 <Button
+                                  color="white"
                                   key={wallet.adapter.name}
                                   onClick={() => select(wallet.adapter.name)}
                                   leftIcon={
@@ -414,6 +420,7 @@ const ConnectWallet = forwardRef<ConnectWalletProps, "button">(
                     </VStack>
                     <Divider />
                     <Button
+                      color="white"
                       onClick={connectWithTorus}
                       variant="unstyled"
                       w="full"

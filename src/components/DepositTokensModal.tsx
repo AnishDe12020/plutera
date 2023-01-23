@@ -208,6 +208,7 @@ const DepositTokensModal = ({
   return (
     <>
       <Button
+        color="white"
         leftIcon={<Icon as={LandmarkIcon} />}
         onClick={onOpen}
         {...otherProps}

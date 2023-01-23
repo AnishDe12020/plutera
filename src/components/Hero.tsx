@@ -41,6 +41,7 @@ export default function Hero() {
             position={"relative"}
           >
             <Button
+              color="white"
               colorScheme={"purple"}
               bg={"purple.300"}
               rounded={"full"}

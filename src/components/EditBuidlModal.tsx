@@ -89,6 +89,7 @@ const EditBuidlModal = ({
   return (
     <>
       <Button
+        color="white"
         leftIcon={<Icon as={PencilIcon} />}
         onClick={onOpen}
         {...otherProps}
@@ -127,7 +128,12 @@ const EditBuidlModal = ({
                 <Textarea {...register("description", { required: false })} />
               </FormControl>
 
-              <Button color="white" isLoading={isLoading} type="submit">
+              <Button
+                color="white"
+                color="white"
+                isLoading={isLoading}
+                type="submit"
+              >
                 Edit Buidl
               </Button>
             </VStack>

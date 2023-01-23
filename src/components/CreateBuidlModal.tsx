@@ -154,6 +154,7 @@ const CreateBuidlModal = ({
   return (
     <>
       <Button
+        color="white"
         leftIcon={<Icon as={PlusIcon} />}
         onClick={onOpen}
         {...otherProps}

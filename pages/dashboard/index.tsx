@@ -60,6 +60,7 @@ const DashboardPage: NextPage<DashboardPageProps> = ({ buidls }) => {
             <CreaeUpdateModal buidl={buidl}>Post Update</CreaeUpdateModal>
 
             <Button
+              color="white"
               as={Link}
               isExternal
               leftIcon={<Icon as={ExternalLink} />}
