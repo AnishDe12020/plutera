@@ -34,6 +34,10 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
@@ -240,6 +244,22 @@ const ConnectWallet = forwardRef<ConnectWalletProps, "button">(
           <ModalOverlay />
           <ModalContent>
             <ModalBody p={2}>
+              <Alert status="info" rounded="lg">
+                <VStack alignItems="start" gap={4}>
+                  <HStack>
+                    <AlertIcon />
+
+                    <AlertTitle>Please use devnet</AlertTitle>
+                  </HStack>
+
+                  <AlertDescription>
+                    We are currently only deployed on the Solana devnet. Please
+                    change your Solana wallet&apos;s network to devnet. If you
+                    have already done this, you can ignore this alert.
+                  </AlertDescription>
+                </VStack>
+              </Alert>
+
               <VStack>
                 {publicKey ? (
                   <>

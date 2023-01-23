@@ -45,7 +45,7 @@ const variantSolid = defineStyle((props) => {
 
   if (c === "brand") {
     return {
-      color: mode("black", "white")(props),
+      color: "white",
       bg: "brand.secondary",
       _hover: { bg: "brand.tertiary" },
       _active: { bg: "brand.quaternary" },
