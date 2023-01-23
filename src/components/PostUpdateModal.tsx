@@ -95,8 +95,13 @@ const CreaeUpdateModal = ({
         buidlId: buidl.id,
         name: data.name,
         description: data.description,
-        updateNumber: buidl.updatesTillNow || 0 + 1,
+        updateNumber: (buidl.updatesTillNow || 0) + 1,
         pubkey: updateAccountKeypair.publicKey.toBase58(),
+      });
+
+      await axios.patch("/api/buidls/update", {
+        id: buidl.id,
+        updates: (buidl.updatesTillNow || 0) + 1,
       });
 
       console.log("created update", update);

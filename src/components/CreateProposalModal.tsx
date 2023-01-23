@@ -114,7 +114,7 @@ const CreateProposalModal = ({
         name: data.name,
         purpose: data.purpose,
         amount: Number(data.amount),
-        endTimestamp: new Date().getTime() + data.numberOfDays * 24 * 60 * 60,
+        endTimestamp: Date.now() + data.numberOfDays * 24 * 60 * 60 * 1000,
         withdrawerAddress: data.withdrawerAddresss,
         pubkey: proposalAccountKeypair.publicKey.toBase58(),
       });

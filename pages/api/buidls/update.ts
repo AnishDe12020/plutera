@@ -18,11 +18,10 @@ export default async function handler(
         url: req.body.description,
         twitter: req.body.twitter,
         github: req.body.github,
-        amountRaised: Number(req.body.amountRaised),
+        amountRaised: Number(req.body.amountRaised) || undefined,
         updatesTillNow: req.body.updates,
       },
     });
-    console.log(buidlData);
 
     return res.status(200).json({
       status: 200,
