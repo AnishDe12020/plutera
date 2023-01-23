@@ -12,8 +12,12 @@ import {
   Icon,
   Heading,
   Text,
+  useToast,
 } from "@chakra-ui/react";
+import { Proposal } from "@prisma/client";
+import { useConnection } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
+import axios from "axios";
 import { TicketIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useCallback } from "react";
@@ -21,7 +25,7 @@ import { useMutation } from "react-query";
 import useProgram from "../hooks/useProgram";
 
 interface VoteModal extends ButtonProps {
-  proposal: any; // TODO: replace with proposal type
+  proposal: Proposal;
 }
 
 const VoteModal = ({
@@ -31,6 +35,8 @@ const VoteModal = ({
 }: VoteModal) => {
   const { data: session } = useSession();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { connection } = useConnection();
+  const toast = useToast();
 
   const { program } = useProgram();
 
@@ -49,22 +55,36 @@ const VoteModal = ({
       const voterPDA = PublicKey.findProgramAddressSync(
         [
           Buffer.from("vote"),
-          new PublicKey(proposal.address).toBuffer(),
+          new PublicKey(proposal.pubkey).toBuffer(),
           new PublicKey(session.user.name).toBuffer(),
         ],
         program.programId
       )[0];
 
-      // program.methods
-      //   .vote(upvote)
-      //   .accounts({
-      //     proposalAccount: new PublicKey(proposal.address),
-      //     voter: new PublicKey(session.user.name),
-      //     voterAccount: voterPDA,
-      //   })
-      //   .rpc();
+      const sig = await program.methods
+        .vote(upvote)
+        .accounts({
+          proposalAccount: new PublicKey(proposal.pubkey),
+          voter: new PublicKey(session.user.name),
+          voterAccount: voterPDA,
+        })
+        .rpc();
+
+      await connection.confirmTransaction(sig);
+
+      await axios.patch(`/api/proposals/${proposal.id}`, {
+        upvotes: upvote ? proposal.upvotes + 1 : undefined,
+        downvotes: !upvote ? proposal.downvotes + 1 : undefined,
+      });
+
+      toast({
+        title: "Vote submitted",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
     },
-    [session?.user?.name, program, proposal]
+    [session?.user?.name, program, proposal, connection, toast]
   );
 
   const { mutate, isLoading } = useMutation(handleVote);
@@ -95,7 +115,7 @@ const VoteModal = ({
                 h={12}
                 w="full"
               >
-                Approve
+                Approve ({proposal.upvotes} till now)
               </Button>
               <Button
                 onClick={() => mutate(false)}
@@ -103,7 +123,7 @@ const VoteModal = ({
                 h={12}
                 w="full"
               >
-                Reject
+                Reject ({proposal.downvotes} till now)
               </Button>
             </VStack>
           </ModalBody>
