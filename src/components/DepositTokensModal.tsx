@@ -11,7 +11,6 @@ import {
   FormHelperText,
   FormLabel,
   Input,
-  Textarea,
   VStack,
   ButtonProps,
   useDisclosure,
@@ -24,23 +23,20 @@ import { BN } from "@project-serum/anchor";
 import {
   createAssociatedTokenAccountInstruction,
   getAccount,
-  getAssociatedTokenAddress,
   getAssociatedTokenAddressSync,
-  getOrCreateAssociatedTokenAccount,
   TokenAccountNotFoundError,
   TokenInvalidAccountOwnerError,
 } from "@solana/spl-token";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { Keypair, PublicKey, Transaction } from "@solana/web3.js";
+import { PublicKey, Transaction } from "@solana/web3.js";
 import axios from "axios";
-import { LandmarkIcon, PlusIcon } from "lucide-react";
+import { LandmarkIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import useProgram from "../hooks/useProgram";
-import { BONK_TOKEN, USDC_TOKEN } from "../lib/constants";
-import { Token } from "../types/model";
+
 import ConnectWallet from "./ConnectWallet";
 
 interface DepositTokensForm {
@@ -182,6 +178,21 @@ const DepositTokensModal = ({
       await axios.patch("/api/buidls/update", {
         amountRaised: Number(buidl.amountRaised) + Number(data.amount),
         id: buidl.id,
+      });
+
+      await axios.post("/api/backers", {
+        buidlId: buidl.id,
+        userPubkey: session.user.name,
+        pubkey: backerAccountPDA,
+        amount: data.amount,
+      });
+
+      toast({
+        title: "Tokens deposited",
+        description: "Your tokens have been deposited",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
       });
     },
     [program, session?.user?.name, buidl, connection, sendTransaction, toast]

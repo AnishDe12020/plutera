@@ -26,6 +26,7 @@ model User {
   email     String?
   twitter   String?
   buidls    Buidl[]
+  Backer    Backer[]
 }
 
 model Buidl {
@@ -48,6 +49,7 @@ model Buidl {
   Proposal        Proposal[]
   Update          Update[]
   Goal            Goal[]
+  Backer          Backer[]
 }
 
 model Proposal {
@@ -88,4 +90,16 @@ model Goal {
   completedAt DateTime?
   buidl       Buidl     @relation(fields: [buidlId], references: [id])
   buidlId     String    @db.ObjectId
+}
+
+model Backer {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  pubkey    String
+  amount    Int
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique @db.ObjectId
+  buidl     Buidl    @relation(fields: [buidlId], references: [id])
+  buidlId   String   @db.ObjectId
 }
