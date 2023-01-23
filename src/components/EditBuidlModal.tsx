@@ -81,7 +81,7 @@ const EditBuidlModal = ({
         isClosable: true,
       });
     },
-    [session?.user?.name, toast]
+    [session?.user?.name, toast, previousBuidl]
   );
 
   const { mutate, isLoading } = useMutation(handleEditBuidl);
@@ -128,12 +128,7 @@ const EditBuidlModal = ({
                 <Textarea {...register("description", { required: false })} />
               </FormControl>
 
-              <Button
-                color="white"
-                color="white"
-                isLoading={isLoading}
-                type="submit"
-              >
+              <Button color="white" isLoading={isLoading} type="submit">
                 Edit Buidl
               </Button>
             </VStack>
