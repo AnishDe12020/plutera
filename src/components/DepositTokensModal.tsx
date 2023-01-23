@@ -259,7 +259,7 @@ const DepositTokensModal = ({
               </FormControl>
 
               {session?.user?.name && publicKey ? (
-                <Button isLoading={isLoading} type="submit">
+                <Button color="white" isLoading={isLoading} type="submit">
                   Fund
                 </Button>
               ) : (

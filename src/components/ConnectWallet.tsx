@@ -175,7 +175,14 @@ const ConnectWallet = forwardRef<ConnectWalletProps, "button">(
     return publicKey && session ? (
       <Popover>
         <PopoverTrigger>
-          <Button variant="ghost" h="fit-content" minW="36" py={2} left={-2}>
+          <Button
+            color="white"
+            variant="ghost"
+            h="fit-content"
+            minW="36"
+            py={2}
+            left={-2}
+          >
             <HStack gap={2}>
               <Icon as={Wallet} />
               <Text fontSize="xs">{truncatePubkey(publicKey.toBase58())}</Text>
@@ -236,7 +243,7 @@ const ConnectWallet = forwardRef<ConnectWalletProps, "button">(
       </Popover>
     ) : (
       <>
-        <Button onClick={onModalOpen} {...otherProps}>
+        <Button color="white" onClick={onModalOpen} {...otherProps}>
           {children || "Get Started"}
         </Button>
 
@@ -289,7 +296,11 @@ const ConnectWallet = forwardRef<ConnectWalletProps, "button">(
                             {...register("username", { required: true })}
                           />
                         </FormControl>
-                        <Button type="submit" isLoading={isSigningIn}>
+                        <Button
+                          color="white"
+                          type="submit"
+                          isLoading={isSigningIn}
+                        >
                           Sign Up
                         </Button>
                       </VStack>
@@ -366,7 +377,7 @@ const ConnectWallet = forwardRef<ConnectWalletProps, "button">(
                         </>
                       )}
 
-                      <Button onClick={onCollapsedWalletsToggle}>
+                      <Button color="white" onClick={onCollapsedWalletsToggle}>
                         {isCollapsedWalletsOpen ? "Hide" : "Show"} unavailable
                         wallets
                       </Button>

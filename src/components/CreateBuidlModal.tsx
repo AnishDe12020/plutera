@@ -234,7 +234,7 @@ const CreateBuidlModal = ({
                 )}
               </FormControl>
 
-              <Button isLoading={isLoading} type="submit">
+              <Button color="white" isLoading={isLoading} type="submit">
                 Create Buidl
               </Button>
             </VStack>

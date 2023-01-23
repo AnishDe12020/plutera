@@ -260,7 +260,7 @@ const CreateProposalModal = ({
                 )}
               </FormControl>
 
-              <Button isLoading={isLoading} type="submit">
+              <Button color="white" isLoading={isLoading} type="submit">
                 Create Proposal
               </Button>
             </VStack>

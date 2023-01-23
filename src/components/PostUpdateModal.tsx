@@ -176,7 +176,7 @@ const CreaeUpdateModal = ({
                 )}
               </FormControl>
 
-              <Button isLoading={isLoading} type="submit">
+              <Button color="white" isLoading={isLoading} type="submit">
                 Post Update
               </Button>
             </VStack>

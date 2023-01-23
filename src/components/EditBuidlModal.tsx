@@ -127,7 +127,7 @@ const EditBuidlModal = ({
                 <Textarea {...register("description", { required: false })} />
               </FormControl>
 
-              <Button isLoading={isLoading} type="submit">
+              <Button color="white" isLoading={isLoading} type="submit">
                 Edit Buidl
               </Button>
             </VStack>
