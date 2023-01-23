@@ -35,21 +35,27 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     {
       recipient: `solana:${req.body.pubkey}`,
       metadata: {
-        name: `${buidl.name} - Stage ${buidl.stage}}`,
+        name: `${buidl.name} - Stage ${buidl.stage}`,
         image: getNFT(buidl.stage),
         description: `NFT for backers backing ${buidl.name} at stage ${buidl.stage}`,
         attributes: [
           {
             display_type: "number",
             trait_type: "stage",
-            value: buidl.stage,
+            value: buidl.stage.toString(),
           },
         ],
+      },
+    },
+    {
+      headers: {
+        "x-client-secret": process.env.CROSSMINT_SECRET,
+        "x-project-id": process.env.CROSSMINT_PROJECT_ID,
       },
     }
   );
 
-  return { id: nft.data.id };
+  return res.status(200).json({ id: nft.data.id });
 };
 
 export default handler;

@@ -187,6 +187,11 @@ const DepositTokensModal = ({
         amount: data.amount,
       });
 
+      await axios.post("/api/mint", {
+        pubkey: session.user.name,
+        buidlId: buidl.id,
+      });
+
       toast({
         title: "Tokens deposited",
         description: "Your tokens have been deposited",
