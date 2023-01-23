@@ -52,7 +52,7 @@ export default function Hero() {
               }}
               
             >
-              <Link href="/dashboard">Blog Post</Link>
+              <Link href="/dashboard">Dashboardt</Link>
             </Button>
 
             <Box>
