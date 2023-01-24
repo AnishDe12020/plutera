@@ -26,6 +26,7 @@ import axios from "axios";
 import { ObjectId } from "bson";
 import { PlusIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { useCallback } from "react";
 import { useController, useForm } from "react-hook-form";
 import { useMutation } from "react-query";
@@ -50,6 +51,8 @@ const CreateBuidlModal = ({
 
   const { program } = useProgram();
   const { connection } = useConnection();
+
+  const router = useRouter();
 
   const {
     control,
@@ -138,6 +141,8 @@ const CreateBuidlModal = ({
 
       console.log("created buidl", buidl);
 
+      router.reload();
+
       toast({
         title: "Buidl created",
         description: "Your buidl has been created",
@@ -146,7 +151,7 @@ const CreateBuidlModal = ({
         isClosable: true,
       });
     },
-    [program, session?.user?.name, connection, toast]
+    [program, session?.user?.name, connection, toast, router]
   );
 
   const { mutate, isLoading } = useMutation(handleCreateBuidl);

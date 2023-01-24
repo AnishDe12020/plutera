@@ -8,10 +8,12 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { Buidl } from "@prisma/client";
+import axios from "axios";
 import { ExternalLink } from "lucide-react";
 import { GetServerSideProps, NextPage } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
+import { useQuery } from "react-query";
 
 import CreateBuidlModal from "../../src/components/CreateBuidlModal";
 import CreateProposalModal from "../../src/components/CreateProposalModal";
@@ -27,17 +29,19 @@ interface DashboardPageProps {
   buidls: Buidl[];
 }
 
-const DashboardPage: NextPage<DashboardPageProps> = ({ buidls }) => {
+const DashboardPage: NextPage<DashboardPageProps> = ({
+  buidls: initialBuidls,
+}) => {
   const { data: session } = useSession();
 
   return (
-    <VStack gap={8}>
+    <VStack gap={8} pb={8}>
       <Heading>Your Buidls</Heading>
 
       <CreateBuidlModal>New Buidl</CreateBuidlModal>
 
       <VStack gap={4}>
-        {buidls.map((buidl) => (
+        {initialBuidls.map((buidl) => (
           <VStack
             key={buidl.id}
             border="1px solid"
@@ -71,37 +75,6 @@ const DashboardPage: NextPage<DashboardPageProps> = ({ buidls }) => {
           </VStack>
         ))}
       </VStack>
-
-      {/* <EditBuidlModal previousBuidl={{ name: "test", description: "desc" }}>
-        Edit Buidl
-      </EditBuidlModal>
-      <CreateProposalModal buidl={{ address: "gwerhiogh", token: "USDC" }}>
-        Create Proposal
-      </CreateProposalModal>
-
-      <VoteModal
-        proposal={{
-          address: "fwer",
-          name: "test proposal",
-          purpose:
-            "Commodo dolor pariatur voluptate velit excepteur commodo minim mollit eiusmod elit commodo laborum consequat. Quis sit commodo et id labore cupidatat ex enim non proident cillum tempor et. Duis minim enim nostrud mollit est dolore eu voluptate pariatur tempor nulla. Sit irure dolore ipsum incididunt exercitation. Ut aliqua quis sint sit ipsum ex nulla mollit nisi occaecat in cillum esse laboris.",
-        }}
-      >
-        Vote
-      </VoteModal>
-      <CreaeUpdateModal buidl={{ address: "wer", updatesTillNow: 69 }}>
-        Post Update
-      </CreaeUpdateModal>
-      <DepositTokensModal
-        buidl={{
-          amountRequested: 10000,
-          amountFundedTillNow: 3000,
-          address: "erw",
-          token: "USDC",
-        }}
-      >
-        Deposit Tokens
-      </DepositTokensModal> */}
     </VStack>
   );
 };

@@ -20,6 +20,7 @@ import { PublicKey } from "@solana/web3.js";
 import axios from "axios";
 import { TicketIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { useCallback } from "react";
 import { useMutation } from "react-query";
 import useProgram from "../hooks/useProgram";
@@ -39,6 +40,8 @@ const VoteModal = ({
   const toast = useToast();
 
   const { program } = useProgram();
+
+  const router = useRouter();
 
   const handleVote = useCallback(
     async (upvote: boolean) => {
@@ -83,8 +86,10 @@ const VoteModal = ({
         duration: 5000,
         isClosable: true,
       });
+
+      router.reload();
     },
-    [session?.user?.name, program, proposal, connection, toast]
+    [session?.user?.name, program, proposal, connection, toast, router]
   );
 
   const { mutate, isLoading } = useMutation(handleVote);
